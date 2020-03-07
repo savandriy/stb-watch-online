@@ -7,44 +7,66 @@
 
 
 <script>
-
-  async function addPlayer () {
-    let stbUrl = document.getElementById("url-input").value;
-    console.log('stbUrl', stbUrl);
+  const CORS_SERVER = "https://cors-anywhere.herokuapp.com/"; 
+  const STARLIGHT_API_HOST = "https://vcms-api2.starlight.digital/player-api/";
+  const STARLIGHT_PLAYER_STRING = "https://player.starlight.digital/vplayer/?hash=";
+  
+  async function makeRequest(url, response_type) {
+    let response = await fetch(`${CORS_SERVER}/${url}`);
+    if (response.ok) { // if HTTP status 200-299
+      if (response_type === "text") {
+        return await response.text();
+      } else if (resposne_type === "json") {
+        return await response.json();
+      } 
+    } else {
+      throw new Error('Request failed!');
+    }
+  }
+  
+  function createVideo(url) {
+    // remove previous video, if exists
+    let oldVideoNode = document.querySelector('video');
+    if (typeof(oldVideoNode) != 'undefined' && oldVideoNode != null)
+    {
+      oldVideoNode.remove();   
+    }
     
-    let stbResponse = await fetch("https://cors-anywhere.herokuapp.com/" + stbUrl);
-    if (stbResponse.ok) { // if HTTP status 200-299
-      let stbHTML = await stbResponse.text();
+    // create video
+    let videoNode = document.createElement("VIDEO");
+
+    videoNode.setAttribute("src", url);
+    videoNode.setAttribute("width", "640");
+    videoNode.setAttribute("height", "480");
+    videoNode.setAttribute("controls", "controls");
+    
+    document.getElementById("video").appendChild(videoNode);
+  }
+  
+  async function addPlayer () {
+    try {
+      // get url from input
+      let stbUrl = document.getElementById("url-input").value;
       
+      // get html from stb
+      let stbHTML = await makeRequest(stbUrl, "text");
+
+      // scrape the html
       let parser = new DOMParser();
       let stbDoc = parser.parseFromString(stbHTML, 'text/html');
-      
-      const starlightApiHost = "https://vcms-api2.starlight.digital/player-api/";
       let starlightPlayerUrl = stbDoc.querySelector('meta[itemprop="embedURL"]').content;
-      let starlightApiUrl = starlightPlayerUrl.replace("https://player.starlight.digital/vplayer/?hash=", starlightApiHost).replace("&", "?");
-      
-      let starlightResponse = await fetch("https://cors-anywhere.herokuapp.com/" + starlightApiUrl);
-      if (starlightResponse.ok) { // if HTTP status 200-299
-        let starlightJson = await starlightResponse.json();
-        let videoFileUrl = starlightJson.video[0].media[1].url;
-        
-        // create video
-        var x = document.createElement("VIDEO");
+      let starlightApiUrl = starlightPlayerUrl.replace(STARLIGHT_PLAYER_STRING, STARLIGHT_API_HOST).replace("&", "?");
 
-        x.setAttribute("src", videoFileUrl);
+      // get the video file url
+      let starlightJson = await makeRequest(starlightApiUrl, "json");
+      let videoFileUrl = starlightJson.video[0].media.pop().url;
 
-        x.setAttribute("width", "320");
-        x.setAttribute("height", "240");
-        x.setAttribute("controls", "controls");
-        document.body.appendChild(x);
-        
-      } else {
-      alert("HTTP Error: " + response.status);
-    }
+      // create video
+      createVideo(videoFileUrl);
       
-    } else {
-      alert("HTTP Error: " + response.status);
-    }
+    } catch (e) {
+      alert(e)
+    } 
   }
   
 </script>
@@ -58,5 +80,8 @@
     <div class="input-group-append">
       <button class="btn btn-primary" type="button" onclick="addPlayer()">Watch</button>
     </div>
+  </div>
+  
+  <div class="text-center" id="video">
   </div>
 </div>
