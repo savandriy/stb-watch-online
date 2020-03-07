@@ -58,7 +58,13 @@
       let parser = new DOMParser();
       let stbDoc = parser.parseFromString(stbHTML, 'text/html');
       let starlightPlayerUrl = stbDoc.querySelector('meta[itemprop="embedURL"]').content;
-      let starlightApiUrl = starlightPlayerUrl.replace(STARLIGHT_PLAYER_STRING, STARLIGHT_API_HOST).replace("&", "?");
+      
+      // get hash from url GET parameter
+      var url = new URL(starlightPlayerUrl);
+      var hash = url.searchParams.get("hash");
+      
+      // generate api url
+      let starlightApiUrl = `${STARLIGHT_API_HOST}${hash}?referer=${stbUrl}`;
 
       // get the video file url
       let starlightJson = await makeRequest(starlightApiUrl, "json");
