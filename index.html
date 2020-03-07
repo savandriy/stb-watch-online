@@ -12,7 +12,7 @@
     let stbUrl = document.getElementById("url-input").value;
     console.log('stbUrl', stbUrl);
     
-    let stbResponse = await fetch(stbUrl);
+    let stbResponse = await fetch("https://cors-anywhere.herokuapp.com/" + stbUrl);
     if (response.ok) { // if HTTP status 200-299
       let stbHTML = await stbResponse.text();
       
@@ -23,7 +23,7 @@
       let starlightPlayerUrl = stbDoc.querySelector('meta[itemprop="embedURL"]').content;
       let starlightApiUrl = starlightPlayerUrl.replace("https://player.starlight.digital/vplayer/?hash=", starlightApiHost).replace("&", "?");
       
-      let starlightResponse = await fetch(starlightApiUrl);
+      let starlightResponse = await fetch("https://cors-anywhere.herokuapp.com/" + starlightApiUrl);
       if (response.ok) { // if HTTP status 200-299
         let starlightJson = await stbResponse.json();
         let videoFileUrl = starlightJson.video[0].media[1].url;
