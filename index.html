@@ -16,7 +16,7 @@
     if (response.ok) { // if HTTP status 200-299
       if (response_type === "text") {
         return await response.text();
-      } else if (resposne_type === "json") {
+      } else if (response_type === "json") {
         return await response.json();
       } 
     } else {
