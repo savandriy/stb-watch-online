@@ -7,11 +7,11 @@
 
 
 <script>
-  const CORS_SERVER = "https://cors-anywhere.herokuapp.com/"; 
+  const CORS_SERVER = "https://cors-anywhere.herokuapp.com"; 
   const STARLIGHT_API_HOST = "https://vcms-api2.starlight.digital/player-api/";
   const STARLIGHT_PLAYER_STRING = "https://player.starlight.digital/vplayer/?hash=";
   
-  async function makeRequest(url, response_type) {
+  async function makeRequest (url, response_type) {
     let response = await fetch(`${CORS_SERVER}/${url}`);
     if (response.ok) { // if HTTP status 200-299
       if (response_type === "text") {
@@ -24,7 +24,7 @@
     }
   }
   
-  function createVideo(url) {
+  function createVideo (url) {
     // remove previous video, if exists
     let oldVideoNode = document.querySelector('video');
     if (typeof(oldVideoNode) != 'undefined' && oldVideoNode != null)
@@ -43,7 +43,7 @@
     document.getElementById("video").appendChild(videoNode);
   }
   
-  async function addPlayer () {
+  async function main () {
     try {
       // get url from input
       let stbUrl = document.getElementById("url-input").value;
@@ -68,7 +68,6 @@
       alert(e)
     } 
   }
-  
 </script>
 
 <div class="container">
@@ -78,10 +77,20 @@
   <div class="input-group">
     <input id="url-input" type="text" class="form-control" placeholder="STB video page url">
     <div class="input-group-append">
-      <button class="btn btn-primary" type="button" onclick="addPlayer()">Watch</button>
+      <button class="btn btn-primary" type="button" onclick="main()">Watch</button>
     </div>
   </div>
   
   <div class="text-center" id="video">
   </div>
 </div>
+
+<script>
+  // set event listener to submit on Enter
+  const input = document.getElementById("url-input");
+  input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+          main();
+      }
+  });
+</script>
