@@ -8,6 +8,10 @@
 
 
 <script>
+  `
+  Works for novy.tv too, since it uses the same starlight media player
+  `
+  
   const CORS_SERVER = "https://cors-anywhere.herokuapp.com"; 
   const STARLIGHT_API_HOST = "https://vcms-api2.starlight.digital/player-api/";
   const STARLIGHT_PLAYER_STRING = "https://player.starlight.digital/vplayer/?hash=";
@@ -49,22 +53,22 @@
                                    
     try {
       // get url from input
-      let stbUrl = document.getElementById("url-input").value;
+      let inputUrl = document.getElementById("url-input").value;
       
-      // get html from stb
-      let stbHTML = await makeRequest(stbUrl, "text");
+      // get html from target website
+      let pageHtml = await makeRequest(inputUrl, "text");
 
       // scrape the html
       let parser = new DOMParser();
-      let stbDoc = parser.parseFromString(stbHTML, 'text/html');
-      let starlightPlayerUrl = stbDoc.querySelector('meta[itemprop="embedURL"]').content;
+      let pageTree = parser.parseFromString(pageHtml, 'text/html');
+      let starlightPlayerUrl = pageTree.querySelector('meta[itemprop="embedURL"]').content;
       
       // get hash from url GET parameter
       var url = new URL(starlightPlayerUrl);
       var hash = url.searchParams.get("hash");
       
       // generate api url
-      let starlightApiUrl = `${STARLIGHT_API_HOST}${hash}?referer=${stbUrl}`;
+      let starlightApiUrl = `${STARLIGHT_API_HOST}${hash}?referer=${inputUrl}`;
 
       // get the video file url
       let starlightJson = await makeRequest(starlightApiUrl, "json");
@@ -82,11 +86,11 @@
 </script>
 
 <div class="container">
-  <h1>STB Watch online</h1>
+  <h1>STB | Novy | Watch online without ads | Created by @savandriy &trade;</h1>
   
-  <label for="url-input">Please input a URL like https://holostyak.stb.ua/ru/episode/holostyak-10-sezon-vypusk-1-chast-2-ot-06-03-2020/</label>
+  <label for="url-input">Please input a URL like <kbd>https://holostyak.stb.ua/ru/episode/holostyak-10-sezon-vypusk-1-chast-2-ot-06-03-2020/</kbd></label>
   <div class="input-group">
-    <input id="url-input" type="text" class="form-control" placeholder="STB video page url">
+    <input id="url-input" type="text" class="form-control" placeholder="STB | Novy video page url">
     <div class="input-group-append">
       <button class="btn btn-primary" type="button" onclick="main()">Watch</button>
     </div>
