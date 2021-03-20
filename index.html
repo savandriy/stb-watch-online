@@ -12,9 +12,8 @@
   Works for novy.tv too, since it uses the same starlight media player
   `
   
-  const CORS_SERVER = "https://cors-anywhere.herokuapp.com"; 
+  const CORS_SERVER = "https://cors.bridged.cc"; 
   const STARLIGHT_API_HOST = "https://vcms-api2.starlight.digital/player-api/";
-  const STARLIGHT_PLAYER_STRING = "https://player.starlight.digital/vplayer/?hash=";
   
   async function makeRequest (url, response_type) {
     let response = await fetch(`${CORS_SERVER}/${url}`);
