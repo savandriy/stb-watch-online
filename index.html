@@ -4,8 +4,6 @@
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.6/dist/loadingoverlay.min.js"></script>
-  <script src="https://cdn.vectorly.io/upscaler/latest/vectorly-upscaler.js"></script>
-  <script src="https://cdn.vectorly.io/upscaler/latest/upscaler.951.js"></script>
 </head>
 
 
@@ -41,25 +39,12 @@
     // create video
     let videoNode = document.createElement("VIDEO");
     
-    videoNode.setAttribute("crossorigin", "anonymous");
     videoNode.setAttribute("src", url);
     videoNode.setAttribute("width", "640");
     videoNode.setAttribute("height", "480");
     videoNode.setAttribute("controls", "controls");
     
     document.getElementById("video").appendChild(videoNode);
-  }
-  
-  function upscaleVideo () {
-    // upscale video using vectorly
-    const config = {
-      height: 2160,
-      width: 3840
-    };
-
-    const video = document.querySelector('#video > video');
-
-    const upscaler = new vectorlyUpscaler(video, config);
   }
   
   async function main () {
@@ -90,9 +75,6 @@
 
       // create video
       createVideo(videoFileUrl);
-      // upscale video 2
-      upscaleVideo();
-      
     } catch (e) {
       alert(e)
     } finally {
