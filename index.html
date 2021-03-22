@@ -40,7 +40,8 @@
     
     // create video
     let videoNode = document.createElement("VIDEO");
-
+    
+    videoNode.setAttribute("crossorigin", "anonymous");
     videoNode.setAttribute("src", url);
     videoNode.setAttribute("width", "640");
     videoNode.setAttribute("height", "480");
