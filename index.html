@@ -13,16 +13,19 @@
   Works for novy.tv too, since it uses the same starlight media player
   `
   
-  const CORS_SERVER = "https://thingproxy.freeboard.io/fetch"; 
+  const CORS_SERVER = "https://api.allorigins.win/get?url="; 
   const STARLIGHT_API_HOST = "https://vcms-api2.starlight.digital/player-api/";
   
   async function makeRequest (url, response_type) {
-    let response = await fetch(`${CORS_SERVER}/${url}`);
+    let response = await fetch(`${CORS_SERVER}${url}`);
     if (response.ok) { // if HTTP status 200-299
+      let cors_resp = await response.json();
+      let resp_text = cors_resp.contents;
+      
       if (response_type === "text") {
-        return await response.text();
+        return resp_text;
       } else if (response_type === "json") {
-        return await response.json();
+        return JSON.parse(resp_text);
       } 
     } else {
       throw new Error('Request failed!');
